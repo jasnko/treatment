@@ -45,6 +45,7 @@ img, video { display: block; width: 100%; object-fit: cover; }
 .meta p, .label { font-size: var(--small); line-height: 1.2; font-weight: 500; text-transform: uppercase; letter-spacing: .01em; }
 .meta .r { text-align: right; }
 .display { font-size: var(--display); line-height: 1; font-weight: 400; letter-spacing: -.045em; }
+.subhead { font-size: calc(var(--u) * 72); line-height: 1.1; font-weight: 400; letter-spacing: -.025em; margin-top: calc(var(--u) * 28); }
 .title { font-size: var(--title); line-height: 1.02; font-weight: 400; letter-spacing: -.04em; }
 .big { font-size: var(--title); line-height: 1.04; font-weight: 400; letter-spacing: -.04em; max-width: 82%; }
 .body { font-size: var(--body); line-height: 1.4; }
@@ -159,6 +160,7 @@ td:first-child { font-weight: 500; }
   .meta p:nth-child(n+3) { display: none; }
   .meta p:nth-child(2) { text-align: right; }
   .big { max-width: none; }
+  .subhead { font-size: clamp(26px, 7vw, 40px); margin-top: 10px; }
   .foot, .story, .cast, .pair, .shoot, .r2 { grid-template-columns: 1fr; }
   .foot > .stack:empty, .foot > .spacer { display: none; }
   .block { height: 120px; }
@@ -206,19 +208,16 @@ td:first-child { font-weight: 500; }
 
 <!-- 00 cover -->
 <section class="s cover" id="cover"><div class="frame"><div class="slide">
-  <div class="meta"><p>Jon Rivera</p><p>(2026)</p><p>Music Video Treatment</p><p class="r">(Treatment)</p></div>
+  <div class="meta"><p>Music Video Treatment</p><p>(2026)</p><p></p><p></p></div>
   <div class="grow"></div>
   <h1 class="display">Highs &amp; Lows</h1>
+  <p class="subhead">Jon Rivera</p>
   <div class="grow"></div>
-  <div class="foot">
-    <div class="stack"><p class="label">(Jon Rivera)</p></div>
-    <div class="stack">
-      <p class="label">(Logline)</p>
-      <p class="body">A music video about the highs and lows of becoming: letting go of an old identity, stepping beyond familiar routines and growing into the man he wants to be.</p>
-      <p class="label">Treatment by Jason Nankoo</p>
-    </div>
+  <div class="foot" style="align-items:end">
     <div class="spacer"></div>
-    <div class="stack"><p class="label">(V2)</p><div class="block"></div></div>
+    <div class="stack"><p class="label">Treatment by Jason Nankoo</p></div>
+    <div class="spacer"></div>
+    <div class="stack"><div class="block"></div></div>
   </div>
 </div></div></section>
 
