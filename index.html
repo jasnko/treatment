@@ -96,6 +96,8 @@ td { text-align: left; vertical-align: top; padding: calc(var(--u) * 20) calc(va
 td:first-child { font-weight: 500; }
 
 /* chronological timeline */
+.wiprow { display: flex; align-items: flex-start; gap: calc(var(--u) * 20); }
+.wip { font-size: var(--h3); line-height: 1.1; letter-spacing: -.02em; margin-top: calc(var(--u) * 10); white-space: nowrap; }
 .setbar, .tl { display: grid; grid-template-columns: repeat(8, 1fr); column-gap: calc(var(--u) * 16); }
 .setbar { margin-bottom: calc(var(--u) * 32); }
 .seg { border-top: calc(var(--u) * 8) solid var(--blue); padding-top: calc(var(--u) * 12); }
@@ -160,6 +162,7 @@ td:first-child { font-weight: 500; }
   .meta p:nth-child(n+3) { display: none; }
   .meta p:nth-child(2) { text-align: right; }
   .big { max-width: none; }
+  .wip { font-size: 18px; margin-top: 4px; }
   .subhead { font-size: clamp(26px, 7vw, 40px); margin-top: 10px; }
   .foot, .story, .cast, .pair, .shoot, .r2 { grid-template-columns: 1fr; }
   .foot > .stack:empty, .foot > .spacer { display: none; }
@@ -319,7 +322,7 @@ td:first-child { font-weight: 500; }
 <section class="s" id="order"><div class="frame"><div class="slide">
   <div class="meta"><p>Highs &amp; Lows</p><p>(07)</p><p>Chronological Order</p><p class="r">(Dolly →)</p></div>
   <div class="grow"></div>
-  <h2 class="title">Chronological Order</h2>
+  <div class="wiprow"><h2 class="title">Chronological Order</h2><p class="wip">(WIP)</p></div>
   <div class="grow"></div>
   <div class="setbar">
     <div class="seg io"><p class="label">Intro</p></div>
