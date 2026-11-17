@@ -116,10 +116,22 @@ td:first-child { font-weight: 500; }
 .col img { height: calc(var(--u) * 300); }
 .col img.tall { height: calc(var(--u) * 624); }
 
-/* nav */
-.nav { position: fixed; right: 20px; bottom: 18px; display: flex; gap: 8px; align-items: center; z-index: 10; font: 500 13px/1 'Inter', system-ui, sans-serif; color: var(--blue); mix-blend-mode: normal; }
-.nav button { width: 34px; height: 34px; border: 1.5px solid currentColor; background: rgba(242,241,238,.85); color: inherit; font: inherit; cursor: pointer; }
-.nav span { background: rgba(242,241,238,.85); padding: 10px 10px; min-width: 64px; text-align: center; }
+/* bottom bar: music player + slide nav */
+.bar { position: fixed; right: 20px; bottom: 18px; z-index: 10; display: flex; gap: 8px; align-items: stretch; font: 500 13px/1 'Inter', system-ui, sans-serif; color: var(--blue); }
+.player, .nav { display: flex; align-items: center; gap: 8px; }
+.player { background: rgba(242,241,238,.92); padding: 0 12px 0 0; border: 1.5px solid var(--blue); }
+.pbtn { width: 34px; height: 31px; border: 0; border-right: 1.5px solid var(--blue); background: transparent; color: inherit; cursor: pointer; display: grid; place-items: center; }
+.pbtn svg { width: 12px; height: 12px; }
+.pbtn .i-pause { display: none; }
+.pbtn.on .i-play { display: none; } .pbtn.on .i-pause { display: block; }
+.ptitle { text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; padding-left: 4px; }
+.track { width: 160px; height: 18px; position: relative; cursor: pointer; }
+.track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: rgba(29,53,201,.25); }
+.fill { position: absolute; left: 0; top: 50%; height: 1.5px; width: 0; background: var(--blue); }
+.track:focus-visible { outline: 1.5px solid var(--blue); outline-offset: 2px; }
+.ptime { font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 82px; text-align: right; }
+.nav button { width: 34px; height: 34px; border: 1.5px solid currentColor; background: rgba(242,241,238,.92); color: inherit; font: inherit; cursor: pointer; }
+.nav span { background: rgba(242,241,238,.92); padding: 10px; min-width: 64px; text-align: center; }
 
 /* arrival motion */
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
@@ -176,7 +188,16 @@ td:first-child { font-weight: 500; }
   .col { gap: 12px; }
   .col img, .col img.tall { height: auto; aspect-ratio: 4 / 5; }
   .r2 { gap: 12px; margin-bottom: 12px; }
+  body { padding-bottom: 52px; }
+  .bar { left: 0; right: 0; bottom: 0; }
   .nav { display: none; }
+  .player { flex: 1; border-width: 1.5px 0 0; padding: 0 14px 0 0; height: 52px; padding-bottom: env(safe-area-inset-bottom); }
+  .pbtn { width: 52px; height: 100%; }
+  .ptitle { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+  .ptime { display: none; }
+  .track { position: absolute; left: 0; right: 0; top: -1.5px; width: auto; height: 12px; transform: translateY(-5px); }
+  .track::before, .fill { top: 5px; }
+  .player { position: relative; }
   .s .slide > * { animation: none; }
 }
 </style>
@@ -376,11 +397,23 @@ td:first-child { font-weight: 500; }
   </div>
 </div></div></section>
 
-<nav class="nav" aria-label="Slides">
-  <button type="button" id="prev" aria-label="Previous slide">↑</button>
-  <span id="count">01 / 11</span>
-  <button type="button" id="next" aria-label="Next slide">↓</button>
-</nav>
+<div class="bar" role="region" aria-label="Music and slide controls">
+  <div class="player">
+    <button type="button" id="play" class="pbtn" aria-label="Play music" aria-pressed="false">
+      <svg class="i-play" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/></svg>
+      <svg class="i-pause" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5h2.6v9H2.5zM6.9 1.5h2.6v9H6.9z" fill="currentColor"/></svg>
+    </button>
+    <span class="ptitle">Highs &amp; Lows — Jon Rivera</span>
+    <div class="track" id="track" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="fill" id="fill"></div></div>
+    <span class="ptime" id="ptime">0:00 / 3:41</span>
+  </div>
+  <nav class="nav" aria-label="Slides">
+    <button type="button" id="prev" aria-label="Previous slide">↑</button>
+    <span id="count">01 / 11</span>
+    <button type="button" id="next" aria-label="Next slide">↓</button>
+  </nav>
+</div>
+<audio id="music" src="assets/highs-and-lows.mp3" preload="metadata" loop></audio>
 
 <script>
 (function () {
@@ -406,7 +439,46 @@ td:first-child { font-weight: 500; }
   }
   document.getElementById('prev').onclick = function () { go(current - 1); };
   document.getElementById('next').onclick = function () { go(current + 1); };
+
+  // music: starts on the visitor's first click, tap or key press (browsers block sound before that)
+  var audio = document.getElementById('music'), btn = document.getElementById('play');
+  var track = document.getElementById('track'), fill = document.getElementById('fill'), ptime = document.getElementById('ptime');
+  var userPaused = false, started = false;
+  function fmt(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+  function ui() {
+    var on = !audio.paused;
+    btn.classList.toggle('on', on); btn.setAttribute('aria-pressed', on); btn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+  }
+  function play() { var p = audio.play(); if (p && p.catch) p.catch(function () {}); }
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation(); started = true;
+    if (audio.paused) { userPaused = false; play(); } else { userPaused = true; audio.pause(); }
+  });
+  function firstTouch(e) {
+    if (started || userPaused) return;
+    if (e && e.target && e.target.closest && e.target.closest('#play')) return;
+    started = true; play();
+  }
+  ['pointerdown', 'keydown', 'touchend'].forEach(function (ev) { document.addEventListener(ev, firstTouch, { capture: true }); });
+  play(); // plays at once where the browser allows it
+  audio.addEventListener('play', function () { started = true; ui(); });
+  audio.addEventListener('pause', ui);
+  audio.addEventListener('timeupdate', function () {
+    var d = audio.duration || 221.5, pct = audio.currentTime / d * 100;
+    fill.style.width = pct + '%'; track.setAttribute('aria-valuenow', Math.round(pct));
+    ptime.textContent = fmt(audio.currentTime) + ' / ' + fmt(d);
+  });
+  function seek(e) {
+    var r = track.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
+    audio.currentTime = Math.min(Math.max(x, 0), 1) * (audio.duration || 221.5);
+  }
+  track.addEventListener('click', function (e) { e.stopPropagation(); seek(e); });
+  track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); audio.currentTime += e.key === 'ArrowRight' ? 5 : -5; }
+  });
   document.addEventListener('keydown', function (e) {
+    if (e.target === track) return;
+    if (e.key === ' ' && e.target === btn) return;
     if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].indexOf(e.key) > -1) { e.preventDefault(); go(current + 1); }
     if (['ArrowUp', 'ArrowLeft', 'PageUp'].indexOf(e.key) > -1) { e.preventDefault(); go(current - 1); }
   });
