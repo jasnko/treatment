@@ -74,6 +74,13 @@ h3 { font-size: var(--h3); line-height: 1.1; font-weight: 500; letter-spacing: -
 .vref .vt { font-size: calc(var(--u) * 88); line-height: 1.02; letter-spacing: -.04em; }
 .vref:hover .vt { text-decoration: underline; text-underline-offset: .12em; }
 
+
+/* vimeo preview: silent autoplay, cropped to fill, click opens Vimeo */
+.vplay { position: relative; display: block; overflow: hidden; background: var(--blue); }
+.vplay iframe { position: absolute; top: 50%; left: 50%; height: 100%; width: auto; min-width: 100%; aspect-ratio: 16 / 9; transform: translate(-50%, -50%); border: 0; pointer-events: none; }
+.vplay .vcap { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; gap: 12px; padding: calc(var(--u) * 20) calc(var(--u) * 24); background: var(--blue); color: var(--paper); }
+.vplay:hover .vcap .label:last-child { text-decoration: underline; }
+
 /* approach steps */
 .steps { display: grid; grid-template-columns: repeat(5, 1fr); }
 .step { border-top: 2px solid var(--blue); padding: calc(var(--u) * 24) calc(var(--u) * 24) 0 0; display: flex; flex-direction: column; gap: calc(var(--u) * 16); }
@@ -146,7 +153,8 @@ td:first-child { font-weight: 500; }
   .story img, .cast img { height: auto; aspect-ratio: 4 / 5; }
   .story .stack { gap: 20px; }
   .pair .media { height: auto; aspect-ratio: 4 / 3; }
-  .vref { aspect-ratio: auto; min-height: 220px; padding: 22px; }
+  .pair .vplay { aspect-ratio: 16 / 9; height: auto; }
+  .vplay .vcap { padding: 10px 12px; }
   .vref .vt { font-size: 40px; }
   .steps { grid-template-columns: 1fr; gap: 0; }
   .step { padding: 16px 0 20px; border-top: 2px solid var(--blue); }
@@ -206,22 +214,9 @@ td:first-child { font-weight: 500; }
   </div>
 </div></div></section>
 
-<!-- 02 characters -->
-<section class="s alt" id="characters"><div class="frame"><div class="slide">
-  <div class="meta"><p>Highs &amp; Lows</p><p>(02)</p><p>Characters</p><p class="r">(Jon Rivera)</p></div>
-  <div class="grow"></div>
-  <h2 class="title">Characters</h2>
-  <div class="grow"></div>
-  <div class="cast">
-    <div class="person"><img src="assets/jon-character.jpg" alt="Portrait of Jon" loading="lazy"><h3>Jon</h3><p class="small">Present day. Letting go of an old identity and growing into the man he wants to be.</p></div>
-    <div class="person"><img src="assets/kata.jpg" alt="Portrait of Kata in red light" loading="lazy"><h3>Kata</h3><p class="small">His sister. The women, art and creativity that shape his journey.</p></div>
-    <div class="person"><img src="assets/luca-emma.jpg" alt="Luca and Emma standing together in a living room" loading="lazy"><h3>Luca &amp; Emma</h3><p class="small">Jon and his sister as teenagers, in the scenes from his past.</p></div>
-  </div>
-</div></div></section>
-
-<!-- 03 concept -->
+<!-- 02 concept -->
 <section class="s alt" id="concept"><div class="frame"><div class="slide">
-  <div class="meta"><p>Highs &amp; Lows</p><p>(03)</p><p>The Concept</p><p class="r">(Jon Rivera)</p></div>
+  <div class="meta"><p>Highs &amp; Lows</p><p>(02)</p><p>The Concept</p><p class="r">(Jon Rivera)</p></div>
   <div class="grow"></div>
   <h2 class="title">The Concept</h2>
   <div class="grow"></div>
@@ -231,13 +226,25 @@ td:first-child { font-weight: 500; }
       <p class="label">(First reference) Two rooms, one frame</p>
     </div>
     <div class="stack">
-      <a class="vref media" href="https://vimeo.com/1147690663/a433b6687a" target="_blank" rel="noopener">
-        <p class="label">(Video)</p>
-        <p class="vt">Rooms – One Shot</p>
-        <p class="label">Watch on Vimeo ↗</p>
+      <a class="vplay media" href="https://vimeo.com/1147690663/a433b6687a" target="_blank" rel="noopener" aria-label="Rooms – One Shot, watch on Vimeo">
+        <iframe src="https://player.vimeo.com/video/1147690663?h=a433b6687a&amp;background=1&amp;autoplay=1&amp;muted=1&amp;loop=1&amp;autopause=0&amp;dnt=1" title="Rooms – One Shot (preview)" allow="autoplay; fullscreen; picture-in-picture" tabindex="-1" loading="lazy"></iframe>
+        <span class="vcap"><span class="label">Rooms – One Shot</span><span class="label">Watch on Vimeo ↗</span></span>
       </a>
       <p class="label">(Second reference) One continuous move through the set</p>
     </div>
+  </div>
+</div></div></section>
+
+<!-- 03 characters -->
+<section class="s alt" id="characters"><div class="frame"><div class="slide">
+  <div class="meta"><p>Highs &amp; Lows</p><p>(03)</p><p>Characters</p><p class="r">(Jon Rivera)</p></div>
+  <div class="grow"></div>
+  <h2 class="title">Characters</h2>
+  <div class="grow"></div>
+  <div class="cast">
+    <div class="person"><img src="assets/jon-character.jpg" alt="Portrait of Jon" loading="lazy"><h3>Jon</h3><p class="small">Present day. Letting go of an old identity and growing into the man he wants to be.</p></div>
+    <div class="person"><img src="assets/kata.jpg" alt="Portrait of Kata in red light" loading="lazy"><h3>Kata</h3><p class="small">His sister. The women, art and creativity that shape his journey.</p></div>
+    <div class="person"><img src="assets/luca-emma.jpg" alt="Luca and Emma standing together in a living room" loading="lazy"><h3>Luca &amp; Emma</h3><p class="small">Jon and his sister as teenagers, in the scenes from his past.</p></div>
   </div>
 </div></div></section>
 
